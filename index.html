@@ -1057,7 +1057,33 @@ function renderHistoryTable(){
     </tr>
   `).join('');
 }
+function calcAverageFromDay1(records){
+  if(!records || records.length === 0) return null;
 
+  // 用 dateKey（YYYY-MM-DD）排序
+  const sorted = [...records].sort(
+    (a,b) => new Date(a.dateKey) - new Date(b.dateKey)
+  );
+
+  const startDate = new Date(sorted[0].dateKey);
+  const today = new Date();
+
+  const dayCount =
+    Math.floor((today - startDate) / (1000*60*60*24)) + 1;
+
+  let total = { kcal:0, pro:0 };
+
+  sorted.forEach(r => {
+    total.kcal += r.kcal || 0;
+    total.pro  += r.pro  || 0;
+  });
+
+  return {
+    dayCount,
+    avgKcal: Math.round(total.kcal / dayCount),
+    avgPro:  Math.round((total.pro / dayCount)*10)/10
+  };
+}
 /* ========================
    最近Average統計（只計算，不畫圖）
 ======================== */
@@ -1084,6 +1110,7 @@ function refreshWeekly(){
 </body>
 
 </html>
+
 
 
 
