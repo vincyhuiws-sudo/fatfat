@@ -272,10 +272,12 @@
 
       <!-- ========== 完成紀錄 + 每週統計頁（只保留數字 + record，已刪 chart） ========== -->
 
-        <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm mb-4">
-          <div class="flex items-center justify-between">
-            <div>
-          <div class="font-semibold text-gray-800">
+  <section id="page-history" class="page">
+
+  <!-- Average card -->
+  <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm mb-4">
+    <div class="font-semibold text-gray-800">
+
               Average（由第 1 日計到今日）
           </div>
           <div class="text-xs text-gray-500 mt-1">
@@ -304,13 +306,11 @@
 
         <div class="bg-gray-50 rounded-xl p-3 mb-3 text-sm text-gray-700">
          <!-- ✅ Record card -->
-<div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm mt-4">
 
-  <div class="font-semibold text-gray-800 mb-3">
-    Record
-  </div>
+<div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
+    <div class="font-semibold text-gray-800 mb-3">Record</div>
+    <div class="overflow-x-auto">
 
-  <div class="overflow-x-auto">
     <table class="w-full text-sm">
       <thead class="bg-gray-50">
         <tr class="text-left text-gray-600">
@@ -327,10 +327,12 @@
   </div>
 
 </div>
-        <div id="history-empty" class="text-center text-gray-500 py-10 hidden">暫無完成紀錄</div>
-      </section>
+        <div id="history-empty" class="text-center text-gray-500 py-10 hidden">
+    暫無完成紀錄
+  </div>
 
-    </div>
+</section>
+
 
 
     <!-- 底部導覽 -->
@@ -1082,6 +1084,7 @@ function refreshWeekly(){
 </body>
 
 </html>
+
 
 
 
