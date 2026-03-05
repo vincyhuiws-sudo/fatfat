@@ -271,13 +271,6 @@
       </section>
 
       <!-- ========== 完成紀錄 + 每週統計頁（只保留數字 + record，已刪 chart） ========== -->
-      <section id="page-history" class="page">
-        <div class="flex items-center mb-4">
-          <button onclick="showPage('page-dashboard')" class="mr-3 text-gray-600 hover:text-primary">
-            <i class="fa fa-arrow-left"></i>
-          </button>
-          <h1 class="text-xl font-bold text-gray-800">完成紀錄＋每週統計</h1>
-        </div>
 
         <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm mb-4">
           <div class="flex items-center justify-between">
@@ -288,7 +281,7 @@
           <div class="text-xs text-gray-500 mt-1">
             包括所有完成紀錄日
           </div>
-``
+
 
           <div class="grid grid-cols-3 gap-2 mt-4">
             <div class="bg-gray-50 rounded-xl p-3">
@@ -310,29 +303,35 @@
         </div>
 
         <div class="bg-gray-50 rounded-xl p-3 mb-3 text-sm text-gray-700">
-          Record。
-        </div>
+         <!-- ✅ Record card -->
+<div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm mt-4">
 
-        <div class="overflow-x-auto bg-white rounded-xl border border-gray-100 shadow-sm">
-          <table class="w-full text-sm">
-            <thead class="bg-gray-50">
-              <tr class="text-left text-gray-600">
-                <th class="px-3 py-2">Date</th>
-                <th class="px-3 py-2">Kcal</th>
-                <th class="px-3 py-2">💪</th>
-                <th class="px-3 py-2">🧈</th>
-                <th class="px-3 py-2">🍚</th>
-                <th class="px-3 py-2">🔥</th>
-              </tr>
-            </thead>
-            <tbody id="history-table"></tbody>
-          </table>
-        </div>
+  <div class="font-semibold text-gray-800 mb-3">
+    Record
+  </div>
 
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm">
+      <thead class="bg-gray-50">
+        <tr class="text-left text-gray-600">
+          <th class="px-3 py-2">Date</th>
+          <th class="px-3 py-2">Kcal</th>
+          <th class="px-3 py-2">💪</th>
+          <th class="px-3 py-2">🧈</th>
+          <th class="px-3 py-2">🍚</th>
+          <th class="px-3 py-2">🔥</th>
+        </tr>
+      </thead>
+      <tbody id="history-table"></tbody>
+    </table>
+  </div>
+
+</div>
         <div id="history-empty" class="text-center text-gray-500 py-10 hidden">暫無完成紀錄</div>
       </section>
 
     </div>
+
 
     <!-- 底部導覽 -->
     <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200">
@@ -1083,5 +1082,6 @@ function refreshWeekly(){
 </body>
 
 </html>
+
 
 
