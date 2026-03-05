@@ -47,6 +47,12 @@
     .ring > .inner{position:relative;text-align:center;line-height:1.1;}
     .page{display:none;}
     .page.active{display:block;}
+
+    /* 爆目標：變紅字 */
+.over-target{
+  color:#d93025;
+  font-weight:700;
+}
   </style>
 
   <style type="text/tailwindcss">
@@ -276,11 +282,13 @@
         <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm mb-4">
           <div class="flex items-center justify-between">
             <div>
-              <div class="font-semibold text-gray-800">最近 7 日統計</div>
-              <div class="text-xs text-gray-500 mt-1">平均以「有完成紀錄」日數計算</div>
-            </div>
-            <button class="mini-btn" onclick="refreshWeekly()">重新計算</button>
+          <div class="font-semibold text-gray-800">
+              Average（由第 1 日計到今日）
           </div>
+          <div class="text-xs text-gray-500 mt-1">
+            包括所有完成紀錄日
+          </div>
+``
 
           <div class="grid grid-cols-3 gap-2 mt-4">
             <div class="bg-gray-50 rounded-xl p-3">
@@ -309,12 +317,12 @@
           <table class="w-full text-sm">
             <thead class="bg-gray-50">
               <tr class="text-left text-gray-600">
-                <th class="px-3 py-2">date</th>
-                <th class="px-3 py-2">kcal</th>
-                <th class="px-3 py-2">protein</th>
-                <th class="px-3 py-2">fat</th>
-                <th class="px-3 py-2">carbs</th>
-                <th class="px-3 py-2">exercise</th>
+                <th class="px-3 py-2">Date</th>
+                <th class="px-3 py-2">Kcal</th>
+                <th class="px-3 py-2">💪</th>
+                <th class="px-3 py-2">🧈</th>
+                <th class="px-3 py-2">🍚</th>
+                <th class="px-3 py-2">🔥</th>
               </tr>
             </thead>
             <tbody id="history-table"></tbody>
@@ -416,26 +424,22 @@ const FOOD_TSV = `
 水果-香蕉    1隻    90    1.1    0.3    23
 水果-藍莓    50g    28.5    0    0.1    7
 早餐-太興    1份    508    26    20    60
-早餐-多士    1片    70    2    1    1
 早餐-西西里    1份    580    35    19    64
 早餐-意樂    1份    300    17    15    26
-早餐-煎雙蛋    1份    140    12    10    1
-早餐-熱咖啡少奶    1份    60    1    2    8
-早餐-鮮牛肉意粉    4片 +75g    285    16.9    13    37.5
-早餐-寶寶    1份    575    32.9    20    62.5
+早餐-鮮牛肉意粉餐    1份    575    32.9    20    62.5
 米餅    1片    25    0.4    0.2    4.3
 米餅薄    1片    25    0.5    0    6
 豆乳yogurt    100g    47    3.8    2.5    3.1
 豆腐-壹品白豆干    200g    104    22    2    4
-千張半張    42g    147    10.5    7.6    4.2
-豆干120g    120g    168    19.44    4.32    12.84
+豆腐-千張半張    42g    147    10.5    7.6    4.2
+豆腐-豆干120g    120g    168    19.44    4.32    12.84
 豆腐-韓國蒸煮豆腐    340g    238    30.6    6.8    10.2
-豆腐花(無糖)    300g    111    9    5    8
+豆腐-豆腐花(無糖)    300g    111    9    5    8
 豆漿    100ml    52    4    3.1    2
 枝豆    30g    36.9    3.8    1.5    1.7
 芝士-脫脂芝士    1片    30    4    0    0
 芝士-Cottage cheese    25g    20.5    3    0.45    1.075
-TUNA 70G    70g    77    18.2    0.35    0
+魚類-TUNA 70G    70g    77    18.2    0.35    0
 蛋-烘蛋2隻    2隻蛋+1g油    160    13    11    1
 蛋-烚蛋    1隻    78    6.5    5.3    0.6
 蛋-烚蛋 半個黃    1隻    52    5.2    2.65    0.6
@@ -455,7 +459,7 @@ TUNA 70G    70g    77    18.2    0.35    0
 蛋白棒-UNO芝麻    1份    88    12    1.8    9
 蛋白棒-UNO核桃    1份    94    9    3.3    10
 蛋白棒-759零糖蛋白棒    1份    172.032    15.0912    6.0288    8.448
-煙三文魚33g    33g    70    7.5    3.5    0
+魚類-煙三文魚33g    33g    70    7.5    3.5    0
 零食-山姆扁桃    1包    123    5.2    10    3.5
 零食-合桃16.4g    16.4g    108    2.5    10.5    2
 零食-杏仁12粒    12    70    2.5    6.1    2.5
@@ -483,16 +487,15 @@ TUNA 70G    70g    77    18.2    0.35    0
 碳水-薯仔    120g    80    2    0.1    20
 碳水-雞肉餃子    6粒    162    7.5    4.6    21
 綠色Bowl    1份    321    29    15    9
-樓上雞胸    1份    110    22.8    2    0
-雞90g雞胸肉    90g    200    28    5    0
+肉類-樓上雞胸    1份    110    22.8    2    0
+肉類-雞90g雞胸肉    90g    200    28    5    0
 蟹柳 - 細    1份    62.4    6    1.3    6.8
-蟹柳 - 大    1份    79.8    7.2    3.6    4.56
-樓上腸    1份    39    6.3    0.6    2.28
-麵包-45 克饅頭    45g    105    3    0.5    22
+肉類-樓上腸    1份    39    6.3    0.6    2.28
+麵包-45克饅頭    45g    105    3    0.5    22
 麵包-細酸種    25g    62.5    2.2    0.5    11.25
 麵包-鹼水包    42G    105    3.5    0.8    18
 麵包-Bakehoue酸種    40g    100    3.5    0.8    18
-Lattle 1秒奶    1杯    26    0.3    0.3    0.5
+飲品-Lattle 1秒奶    1杯    26    0.3    0.3    0.5
 M&S Greek yogurt    100g    62    10    0.2    4.9
 Chobani yogurt    150g    88    15.2    0.3    5.9
 MARS蛋白粉15g    15g    81    15.1    1.3    2.2
@@ -512,8 +515,8 @@ z酒-Whisky    120ml    105    0    0    0
 `.trim();
 
 const ICON_BY_CATEGORY = {
-  '水果':'🥝','早餐':'🍳','米餅':'🍘','豆腐':'🍲','芝士':'🧀','蛋':'🥚',
-  '蛋白棒':'🍫','零食':'🍪','壽司':'🍣','碳水':'🍠','麵包':'🍞',
+  '水果':'🥝','早餐':'🍳','豆腐':'🍲','芝士':'🧀','蛋':'🥚',
+  'Protein':'💪','零食':'🍪','壽司':'🍣','碳水':'🍠','麵包':'🍞',
   '酒精':'🍷','綠色Bowl':'🥗','肉類':'🍗','魚類':'🐟','飲品':'☕','蔬菜':'🥦','其他':'🍽️'
 };
 
@@ -545,8 +548,14 @@ function parseFoodTSV(){
     } else if(rawName.includes('-')) {
       const m = rawName.match(/^([^-–—]+)-(.+)$/);
       if(m){ category = m[1].trim(); name = m[2].trim(); }
-    } else if(rawName.includes('蛋白棒')) category = '蛋白棒';
-    else if(rawName.includes('壽司')) category = '壽司';
+    } else if(rawName.includes('蛋白棒')) category = 'Protein';
+      else if(rawName.includes('蛋白粉')) category = 'Protein';
+      else if(rawName.includes('Pancake')) category = 'Protein';
+      else if(rawName.includes('yogurt')) category = 'Protein';
+      else if(rawName.includes('TVP')) category = 'Protein';
+      else if(rawName.includes('綠色Bowl')) category = 'Protein';
+        else if(rawName.includes('豆漿')) category = 'Protein';
+    else if(rawName.includes('米餅')) category = '碳水';
 
     const icon = ICON_BY_CATEGORY[category] || ICON_BY_CATEGORY['其他'];
     const baseGrams = inferBaseGrams(unit);
@@ -618,7 +627,13 @@ function init(){
     });
     renderFoodList(filtered);
   });
-
+  
+function setOverTarget(elId, value, goal){
+  const el = document.getElementById(elId);
+  if(!el) return;
+  if(value > goal) el.classList.add('over-target');
+  else el.classList.remove('over-target');
+}
   renderDashboard();
 }
 document.addEventListener('DOMContentLoaded', init);
@@ -667,6 +682,16 @@ function renderDashboard(){
 }
 
 function renderTodayRecords(){
+
+  // 爆目標變紅（熱量用 net 去比目標）
+setOverTarget('val-kcal', net, GOALS.kcal);
+
+// 蛋白質通常唔需要紅（除非你都想 >110 變紅）
+// setOverTarget('val-pro', pro, GOALS.pro);
+
+setOverTarget('val-fat', fat, GOALS.fat);
+setOverTarget('val-carb', carb, GOALS.carb);
+  
   const container = document.getElementById('today-records');
   const foods = state.todayFoods;
   const ex = state.exercise;
@@ -1031,39 +1056,29 @@ function renderHistoryTable(){
 }
 
 /* ========================
-   最近7日統計（只計算，不畫圖）
+   最近Average統計（只計算，不畫圖）
 ======================== */
-function getLastNDaysKeys(n=7){
-  const base = new Date();
-  const keys = [];
-  for(let i=n-1;i>=0;i--){
-    const d = new Date(base);
-    d.setDate(d.getDate()-i);
-    keys.push(getDateKey(d));
-  }
-  return keys;
-}
 
 function refreshWeekly(){
-  const keys = getLastNDaysKeys(7);
-  const map = new Map(state.history.map(h=>[h.dateKey,h]));
+  const avg = calcAverageFromDay1(state.history);
 
-  let days = 0, sumK=0, sumP=0;
+  if(!avg){
+    document.getElementById('wk-days').textContent = 0;
+    document.getElementById('wk-avg-kcal').textContent = 0;
+    document.getElementById('wk-avg-pro').textContent = 0;
+    return;
+  }
 
-  keys.forEach(k=>{
-    const rec = map.get(k);
-    if(rec){
-      days++;
-      sumK += Number(rec.kcal)||0;
-      sumP += Number(rec.pro)||0;
-    }
-  });
+  // ✅ 日數：由第 1 日計到今日
+  document.getElementById('wk-days').textContent = avg.dayCount;
 
-  document.getElementById('wk-days').textContent = days;
-  document.getElementById('wk-avg-kcal').textContent = days ? round1(sumK/days) : 0;
-  document.getElementById('wk-avg-pro').textContent = days ? round1(sumP/days) : 0;
+  // ✅ Average（全期）
+  document.getElementById('wk-avg-kcal').textContent = avg.avgKcal;
+  document.getElementById('wk-avg-pro').textContent  = avg.avgPro;
 }
+
 </script>
 </body>
 
 </html>
+
