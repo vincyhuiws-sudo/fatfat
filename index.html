@@ -640,7 +640,13 @@ function setOverTarget(elId, value, goal){
   renderDashboard();
 }
 document.addEventListener('DOMContentLoaded', init);
-
+  
+function setOverTarget(elId, value, goal){
+  const el = document.getElementById(elId);
+  if(!el) return;
+  if(value > goal) el.classList.add('over-target');
+  else el.classList.remove('over-target');
+}
 /* ========================
    計算：今日總和
 ======================== */
@@ -676,24 +682,26 @@ function renderDashboard(){
   document.getElementById('val-burn').textContent = round1(burn);
   document.getElementById('val-net').textContent  = round1(net);
 
+  // ✅ 圈照畫（保留）
   setRing('ring-kcal', Math.min(100, (net/GOALS.kcal)*100), '#22c55e');
   setRing('ring-pro',  Math.min(100, (pro/GOALS.pro)*100), '#2563eb');
   setRing('ring-fat',  Math.min(100, (fat/GOALS.fat)*100), '#f59e0b');
   setRing('ring-carb', Math.min(100, (carb/GOALS.carb)*100), '#a855f7');
 
+  // ✅ 爆目標變紅（加喺呢度就唔會再搞到今日記錄消失）
+  setOverTarget('val-kcal', net, GOALS.kcal);  // 熱量用 net 比
+  setOverTarget('val-fat',  fat, GOALS.fat);
+  setOverTarget('val-carb', carb, GOALS.carb);
+
+  // （可選）如果你都想蛋白質超過 110 都變紅：
+  // setOverTarget('val-pro', pro, GOALS.pro);
+
   renderTodayRecords();
 }
-
+``
 function renderTodayRecords(){
 
-  // 爆目標變紅（熱量用 net 去比目標）
-setOverTarget('val-kcal', net, GOALS.kcal);
 
-// 蛋白質通常唔需要紅（除非你都想 >110 變紅）
-// setOverTarget('val-pro', pro, GOALS.pro);
-
-setOverTarget('val-fat', fat, GOALS.fat);
-setOverTarget('val-carb', carb, GOALS.carb);
   
   const container = document.getElementById('today-records');
   const foods = state.todayFoods;
@@ -1046,17 +1054,28 @@ function renderHistoryTable(){
   }
   empty.classList.add('hidden');
 
-  tbody.innerHTML = state.history.map(h=>`
-    <tr class="border-t">
-      <td class="px-3 py-2 whitespace-nowrap">${escapeHtml(h.dateText)}</td>
-      <td class="px-3 py-2">${round1(h.kcal)}</td>
-      <td class="px-3 py-2">${round1(h.pro)}</td>
-      <td class="px-3 py-2">${round1(h.fat)}</td>
-      <td class="px-3 py-2">${round1(h.carb)}</td>
-      <td class="px-3 py-2">${round1(h.burn)}</td>
-    </tr>
-  `).join('');
+  tbody.innerHTML = state.history.map(h=>{
+    const kcalClass = (Number(h.kcal) > GOALS.kcal) ? 'over-target' : '';
+    const proClass  = (Number(h.pro)  > GOALS.pro)  ? 'over-target' : '';   // 可選：你想蛋白都紅先留
+    const fatClass  = (Number(h.fat)  > GOALS.fat)  ? 'over-target' : '';
+    const carbClass = (Number(h.carb) > GOALS.carb) ? 'over-target' : '';
+
+    // 運動消耗 burn：通常唔需要「爆標」概念，所以唔變紅
+    return `
+      <tr class="border-t">
+        <td class="px-3 py-2 whitespace-nowrap">${escapeHtml(h.dateText)}</td>
+
+        <td class="px-3 py-2 ${kcalClass}">${round1(h.kcal)}</td>
+        <td class="px-3 py-2 ${proClass}">${round1(h.pro)}</td>
+        <td class="px-3 py-2 ${fatClass}">${round1(h.fat)}</td>
+        <td class="px-3 py-2 ${carbClass}">${round1(h.carb)}</td>
+
+        <td class="px-3 py-2 text-blue-600 font-semibold">-${round1(h.burn)}</td>
+      </tr>
+    `;
+  }).join('');
 }
+
 function calcAverageFromDay1(records){
   if(!records || records.length === 0) return null;
 
@@ -1110,6 +1129,7 @@ function refreshWeekly(){
 </body>
 
 </html>
+
 
 
 
