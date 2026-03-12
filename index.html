@@ -1077,30 +1077,22 @@ function renderHistoryTable(){
 }
 
 function calcAverageFromDay1(records){
-  if(!records || records.length === 0) return null;
+  if (!records || records.length === 0) return null;
 
-  // 用 dateKey（YYYY-MM-DD）排序
-  const sorted = [...records].sort(
-    (a,b) => new Date(a.dateKey) - new Date(b.dateKey)
-  );
+  // 有紀錄日數 ✅
+  const dayCount = records.length;
 
-  const startDate = new Date(sorted[0].dateKey);
-  const today = new Date();
+  let total = { kcal: 0, pro: 0 };
 
-  const dayCount =
-    Math.floor((today - startDate) / (1000*60*60*24)) + 1;
-
-  let total = { kcal:0, pro:0 };
-
-  sorted.forEach(r => {
+  records.forEach(r => {
     total.kcal += r.kcal || 0;
     total.pro  += r.pro  || 0;
   });
 
   return {
-    dayCount,
+    dayCount, // ← 而家係「有填嗰幾日」
     avgKcal: Math.round(total.kcal / dayCount),
-    avgPro:  Math.round((total.pro / dayCount)*10)/10
+    avgPro:  Math.round((total.pro / dayCount) * 10) / 10
   };
 }
 /* ========================
@@ -1129,6 +1121,7 @@ function refreshWeekly(){
 </body>
 
 </html>
+
 
 
 
