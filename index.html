@@ -269,27 +269,7 @@
           加入今日記錄
         </button>
       </section>
-      
-<section id="page-fatsecret" class="page">
-  <div class="flex items-center mb-4">
-    <button onclick="showPage('page-dashboard')" class="mr-3 text-gray-600 hover:text-primary">
-      <i class="fa fa-arrow-left"></i>
-    </button>
-    <div class="flex-1">
-      <h1 class="text-xl font-bold text-gray-800">FatSecret 食物查詢</h1>
-    </div>
-  </div>
 
-  <!-- FatSecret 頁面嵌入 -->
- 
-<iframe
-  src="https://www.fatsecret.cn/热量营养"
-  style="width:100%; height: calc(100vh - 140px); border:none;">
-</iframe>
-</section> <!-- ✅ 就係呢行 -->
-
-
-      
       <!-- ========== 完成紀錄 + 每週統計頁（只保留數字 + record，已刪 chart） ========== -->
 
   <section id="page-history" class="page">
@@ -357,12 +337,7 @@
 
     <!-- 底部導覽 -->
     <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200">
-      <div class="max-w-md mx-auto grid grid-cols-4">
-        <button class="py-3 text-center text-sm text-gray-600 hover:text-primary"
-  onclick="showPage('page-fatsecret')">
-  <div><i class="fa fa-leaf"></i></div>
-  <div class="mt-1">FatSecret</div>
-</button>
+      <div class="max-w-md mx-auto grid grid-cols-3">
         <button class="py-3 text-center text-sm text-gray-600 hover:text-primary" onclick="showPage('page-dashboard')">
           <div><i class="fa fa-home"></i></div><div class="mt-1">首頁</div>
         </button>
@@ -724,7 +699,7 @@ function renderDashboard(){
 
   renderTodayRecords();
 }
-  
+``
 function renderTodayRecords(){
 
 
@@ -1147,7 +1122,6 @@ function refreshWeekly(){
 </body>
 
 </html>
-
 
 
 
