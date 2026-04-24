@@ -281,10 +281,12 @@
   </div>
 
   <!-- FatSecret 頁面嵌入 -->
-  <iframe src="https://www.fatsecret.cn/热量营养/普通的/摩卡咖啡"
-          width="100%" height="600"
-          style="border: none;"></iframe>
-</section>
+ 
+<iframe
+  src="https://www.fatsecret.cn/热量营养"
+  style="width:100%; height: calc(100vh - 140px); border:none;">
+</iframe>
+
 
 
       
@@ -355,7 +357,12 @@
 
     <!-- 底部導覽 -->
     <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200">
-      <div class="max-w-md mx-auto grid grid-cols-3">
+      <div class="max-w-md mx-auto grid grid-cols-4">
+        <button class="py-3 text-center text-sm text-gray-600 hover:text-primary"
+  onclick="showPage('page-fatsecret')">
+  <div><i class="fa fa-leaf"></i></div>
+  <div class="mt-1">FatSecret</div>
+</button>
         <button class="py-3 text-center text-sm text-gray-600 hover:text-primary" onclick="showPage('page-dashboard')">
           <div><i class="fa fa-home"></i></div><div class="mt-1">首頁</div>
         </button>
