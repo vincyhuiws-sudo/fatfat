@@ -1000,7 +1000,12 @@ function updateDetailCalc(){
 }
 
 function addSelectedFood(){
-  if(!selectedFood || !selectedFood._computed) return;
+  if(!selectedFood) return;
+
+  // ✅ 保證一定有計算
+  if(!selectedFood._computed){
+    updateDetailCalc();
+  }
 
   const rec = {
     id: Date.now(),
@@ -1017,10 +1022,14 @@ function addSelectedFood(){
   };
 
   state.todayFoods.push(rec);
+
   saveState();
+
   showToast(`已加入：${rec.meal} · ${rec.name}`);
+
   showPage('page-dashboard');
 }
+
 
 /* ========================
    運動
