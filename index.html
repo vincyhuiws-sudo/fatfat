@@ -660,23 +660,21 @@ function init(){
     });
     renderFoodList(filtered);
   });
-  
 
+  // ✅ 首次畫面
   renderDashboard();
   renderGoalButtons();
+} // ✅ 一定要有呢個收尾大括號
 
-// ✅ 重要：DOMContentLoaded 只放一次，而且放喺 init() 外面
+// ✅ DOMContentLoaded 只放一次，必須放喺 init 外面
 document.addEventListener('DOMContentLoaded', init);
 
 /* ========================
-   爆目標：變紅字
+   爆目標：變紅字（global）
 ======================== */
-
-
 function setOverTarget(elId, value, goal){
   const el = document.getElementById(elId);
   if(!el) return;
-
   if(value > goal) el.classList.add('over-target');
   else el.classList.remove('over-target');
 }
