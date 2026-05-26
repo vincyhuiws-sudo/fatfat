@@ -705,7 +705,10 @@ function renderDashboard(){
   document.getElementById('goal-text').textContent =
   `目標：${GOALS.kcal} / ${GOALS.pro}P / ${GOALS.fat}F / ${GOALS.carb}C`;
 
-
+  document.getElementById('val-kcal').textContent = round1(kcal);
+  document.getElementById('val-pro').textContent  = round1(pro);
+  document.getElementById('val-fat').textContent  = round1(fat);
+  document.getElementById('val-carb').textContent = round1(carb);
   document.getElementById('goal-kcal').textContent = GOALS.kcal;
   document.getElementById('goal-pro').textContent  = GOALS.pro;
   document.getElementById('goal-fat').textContent  = GOALS.fat;
