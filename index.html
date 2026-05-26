@@ -83,9 +83,17 @@
         <!-- 四環進度 -->
         <div class="bg-primary-light rounded-2xl p-4 mb-5">
           <div class="flex items-center justify-between mb-3">
-            <div class="font-semibold text-gray-800">首頁營養進度</div>
-            <div class="text-xs text-gray-600">目標：1500 / 110P / 60F / 130C</div>
-          </div>
+            <div class="font-semibold text-gray-800">你今日食幾多</div>
+            <div id="goal-text" class="text-xs text-gray-600"></div>
+        </div>
+
+        <!-- ✅ 加喺呢度 -->
+        <div class="flex gap-2 mt-2 mb-3">
+          <button onclick="setGoal('low')" class="mini-btn">🦦低</button>
+          <button onclick="setGoal('mid')" class="mini-btn">🧘🏻‍♀️中</button>
+          <button onclick="setGoal('high')" class="mini-btn">🏋️高</button>
+        </div>
+
 
           <div class="grid grid-cols-2 gap-3 justify-items-center">
             <div class="ring" id="ring-kcal" style="--p:0;--ring:#22c55e">
@@ -93,7 +101,7 @@
                 <div class="text-2xl">🔥</div>
                 <div class="text-xs text-gray-500 mt-1">熱量</div>
                 <div class="text-sm font-semibold text-gray-800">
-                  <span id="val-kcal">0</span>/<span>1500</span>
+                  <span id="val-kcal">0</span>/<span id="goal-kcal">1500</span>
                 </div>
               </div>
             </div>
@@ -103,7 +111,7 @@
                 <div class="text-2xl">💪</div>
                 <div class="text-xs text-gray-500 mt-1">蛋白質</div>
                 <div class="text-sm font-semibold text-gray-800">
-                  <span id="val-pro">0</span>/<span>110</span>g
+                  <span id="val-pro">0</span>/<span id="goal-pro">110</span>g
                 </div>
               </div>
             </div>
@@ -113,7 +121,7 @@
                 <div class="text-2xl">🧈</div>
                 <div class="text-xs text-gray-500 mt-1">脂肪</div>
                 <div class="text-sm font-semibold text-gray-800">
-                  <span id="val-fat">0</span>/<span>60</span>g
+                  <span id="val-fat">0</span>/<span id="goal-fat">60</span>g
                 </div>
               </div>
             </div>
@@ -123,7 +131,7 @@
                 <div class="text-2xl">🍚</div>
                 <div class="text-xs text-gray-500 mt-1">碳水</div>
                 <div class="text-sm font-semibold text-gray-800">
-                  <span id="val-carb">0</span>/<span>130</span>g
+                  <span id="val-carb">0</span>/<span id="goal-carb">130</span>g
                 </div>
               </div>
             </div>
@@ -370,8 +378,16 @@
 /* ========================
    目標（固定）
 ======================== */
-const GOALS = { kcal: 1500, pro: 110, fat: 60, carb: 130 };
+const GOAL_PRESETS = {
+  low:   { kcal: 1300, pro: 110, fat: 71, carb: 56 },
+  mid:   { kcal: 1400, pro: 110, fat: 57, carb: 112 },
+  high:  { kcal: 1600, pro: 110, fat: 54, carb: 168 }
+};
+function getGoals(){
+  return GOAL_PRESETS[state.goalLevel] || GOAL_PRESETS.mid;
+}
 
+  
 /* ========================
    本地儲存
 ======================== */
@@ -624,6 +640,8 @@ function showPage(id){
 function init(){
   loadState();
 
+  state.goalLevel = state.goalLevel || 'low';
+
   const todayKey = getDateKey();
   if(state.dateKey !== todayKey){
     state.dateKey = todayKey;
@@ -650,15 +668,11 @@ function setOverTarget(elId, value, goal){
   else el.classList.remove('over-target');
 }
   renderDashboard();
+  renderGoalButtons();
 }
 document.addEventListener('DOMContentLoaded', init);
   
-function setOverTarget(elId, value, goal){
-  const el = document.getElementById(elId);
-  if(!el) return;
-  if(value > goal) el.classList.add('over-target');
-  else el.classList.remove('over-target');
-}
+
 /* ========================
    計算：今日總和
 ======================== */
@@ -685,12 +699,17 @@ function setRing(elId, percent, color){
   if(color) el.style.setProperty('--ring', color);
 }
 function renderDashboard(){
+  const GOALS = getGoals();
   const {kcal, pro, fat, carb, burn, net} = sumToday();
 
-  document.getElementById('val-kcal').textContent = round1(kcal);
-  document.getElementById('val-pro').textContent  = round1(pro);
-  document.getElementById('val-fat').textContent  = round1(fat);
-  document.getElementById('val-carb').textContent = round1(carb);
+  document.getElementById('goal-text').textContent =
+  `目標：${GOALS.kcal} / ${GOALS.pro}P / ${GOALS.fat}F / ${GOALS.carb}C`;
+
+
+  document.getElementById('goal-kcal').textContent = GOALS.kcal;
+  document.getElementById('goal-pro').textContent  = GOALS.pro;
+  document.getElementById('goal-fat').textContent  = GOALS.fat;
+  document.getElementById('goal-carb').textContent = GOALS.carb;
   document.getElementById('val-burn').textContent = round1(burn);
   document.getElementById('val-net').textContent  = round1(net);
 
@@ -709,8 +728,16 @@ function renderDashboard(){
   // setOverTarget('val-pro', pro, GOALS.pro);
 
   renderTodayRecords();
+  renderGoalButtons();
 }
-``
+
+  function setGoal(level){
+  state.goalLevel = level;
+  saveState();
+  renderDashboard();
+  showToast('已切換目標：' + level);
+}
+  
 function renderTodayRecords(){
 
 
@@ -1056,6 +1083,7 @@ function finishToday(){
    完成紀錄（Excel table）
 ======================== */
 function renderHistoryTable(){
+  const GOALS = getGoals();
   const tbody = document.getElementById('history-table');
   const empty = document.getElementById('history-empty');
 
@@ -1110,7 +1138,17 @@ function calcAverageFromDay1(records){
 /* ========================
    最近Average統計（只計算，不畫圖）
 ======================== */
+  
+function renderGoalButtons(){
+  document.querySelectorAll('.mini-btn').forEach(btn=>{
+    btn.classList.remove('bg-primary','text-white');
+  });
 
+  const active = document.querySelector(`[onclick="setGoal('${state.goalLevel}')"]`);
+  if(active){
+    active.classList.add('bg-primary','text-white');
+  }
+}
 function refreshWeekly(){
   const avg = calcAverageFromDay1(state.history);
 
