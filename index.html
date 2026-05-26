@@ -661,7 +661,17 @@ function init(){
     renderFoodList(filtered);
   });
   
-document.addEventListener('DOMContentLoaded', init);  
+
+  renderDashboard();
+  renderGoalButtons();
+
+// ✅ 重要：DOMContentLoaded 只放一次，而且放喺 init() 外面
+document.addEventListener('DOMContentLoaded', init);
+
+/* ========================
+   爆目標：變紅字
+======================== */
+
 
 function setOverTarget(elId, value, goal){
   const el = document.getElementById(elId);
