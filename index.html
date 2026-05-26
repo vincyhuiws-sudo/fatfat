@@ -662,16 +662,15 @@ function init(){
   });
   
 document.addEventListener('DOMContentLoaded', init);  
+
 function setOverTarget(elId, value, goal){
   const el = document.getElementById(elId);
   if(!el) return;
+
   if(value > goal) el.classList.add('over-target');
   else el.classList.remove('over-target');
 }
-  renderDashboard();
-  renderGoalButtons();
-}
-document.addEventListener('DOMContentLoaded', init);
+
   
 
 /* ========================
